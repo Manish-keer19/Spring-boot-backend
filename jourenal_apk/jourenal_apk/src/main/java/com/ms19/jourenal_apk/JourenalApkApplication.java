@@ -1,13 +1,18 @@
-package com.manishkeer.Journal.apk;
+package com.ms19.jourenal_apk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication
-public class JournalApkApplication {
+public class JourenalApkApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JournalApkApplication.class, args);
+		SpringApplication.run(JourenalApkApplication.class, args);
 	}
+
+
+
+	
 
 }

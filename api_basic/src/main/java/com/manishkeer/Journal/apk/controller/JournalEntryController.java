@@ -38,7 +38,7 @@ class JournalEntryController {
 
     @GetMapping("/id/{Id}")
     public journalModel getEntryById(@PathVariable String Id) {
-        return JournalEntrys.get(Id);
+        return JournalEntrys.get(Id);  
     }
 
     @DeleteMapping("/id/{id}")

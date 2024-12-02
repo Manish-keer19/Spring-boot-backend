@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.9</version>
+		<version>3.4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.manishkeer</groupId>
-	<artifactId>Journal-apk</artifactId>
+	<groupId>com.ms19</groupId>
+	<artifactId>jourenal_apk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Journal-apk</name>
-	<description>End to end journal App</description>
+	<name>jourenal_apk</name>
+	<description>jourenal apk</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -40,6 +40,23 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<version>3.1.4</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<version>1.18.36</version>
+		<scope>provided</scope>
+	</dependency>
+
 	</dependencies>
 
 	<build>

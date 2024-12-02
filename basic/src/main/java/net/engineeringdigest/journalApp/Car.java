@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Component
+@Component 
 public class Car {
 
   @Autowired
   private Dog dog;
 
-  @GetMapping("/ok")
+  @GetMapping("/ok") 
   public String ok() {
     return dog.fun();
 
