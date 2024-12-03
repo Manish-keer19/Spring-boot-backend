@@ -18,13 +18,10 @@ import com.ms19.jourenal_apk.Services.JournalEntryServices;
 import com.ms19.jourenal_apk.entity.journalEntryModel;
 import com.ms19.jourenal_apk.Response.*;
 
-
-
-
 @RestController
 @RequestMapping("api/v1")
 public class JourenalEntryController {
-    
+
     @Autowired
     private JournalEntryServices journalEntryServices;
 
@@ -33,15 +30,21 @@ public class JourenalEntryController {
         return "hello from manish";
     }
 
-    @PostMapping("/createEntry")
-    public Response createEntry(@RequestBody journalEntryModel myEntry) {
+    @PostMapping("/createEntry/{userName}")
+    public Response createEntry(@RequestBody journalEntryModel myEntry, @PathVariable String userName) {
         try {
 
-            journalEntryServices.saveEntry(myEntry);
-            return new Response(200, true, "journal entry created succefully");
+            journalEntryModel journalEntry = journalEntryServices.saveEntry(myEntry, userName);
+
+            if (journalEntry == null) {
+
+                return new Response(404, false, "jounal entry is null");
+
+            }
+            return new Response(200, true, "journal entry created succefully", null, journalEntry);
         } catch (Exception e) {
 
-            return new Response(0, false, "could not create entry", e.getMessage());
+            return new Response(440, false, "could not create entry", e.getMessage());
         }
 
     }
@@ -75,11 +78,11 @@ public class JourenalEntryController {
 
     }
 
-    @DeleteMapping("/deleteEntry/{myid}")
-    public ResponseEntity<Response> deleteOnEntry(@PathVariable("myid") ObjectId myId) {
+    @DeleteMapping("/deleteEntry/{userName}/{myid}")
+    public ResponseEntity<Response> deleteOnEntry(@PathVariable("myid") ObjectId myId, @PathVariable String userName) {
         try {
             // Attempt to delete the entry
-            Object deletedEntry = journalEntryServices.DeleteEntry(myId).orElse(null);
+            Object deletedEntry = journalEntryServices.DeleteEntry(myId, userName).orElse(null);
 
             if (deletedEntry == null) {
                 // Entry not found, return 404
@@ -102,13 +105,13 @@ public class JourenalEntryController {
         }
     }
 
-    @PutMapping("/updateEntry/{myid}")
-    public Response updateEntry(@PathVariable("myid") ObjectId myid, 
-    @RequestBody journalEntryModel entryModel) {
+    @PutMapping("/updateEntry/{username}/{myid}")
+    public Response updateEntry(@PathVariable("myid") ObjectId myid,
+            @RequestBody journalEntryModel entryModel) {
         try {
             Object Entry = journalEntryServices.updateOneEntry(myid, entryModel);
             return new Response(200, true, "entry update succefully", null, Entry);
-    
+
         } catch (Exception e) {
             return new Response(500, false, "could not update the Entry", e.getMessage(), null);
 

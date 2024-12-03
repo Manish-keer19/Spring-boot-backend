@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ms19.jourenal_apk.Repository.JournaleEntryRepo;
+import com.ms19.jourenal_apk.Repository.UserRepo;
 import com.ms19.jourenal_apk.entity.journalEntryModel;
+import com.ms19.jourenal_apk.entity.userModel;
 
 @Component
 public class JournalEntryServices {
@@ -16,8 +18,24 @@ public class JournalEntryServices {
     @Autowired
     private JournaleEntryRepo journaleEntryRepo;
 
-    public void saveEntry(journalEntryModel myEntry) {
-        journaleEntryRepo.save(myEntry);
+    @Autowired
+    private UserServices userServices;
+
+    @Autowired
+    private UserRepo userRepo;
+
+    public journalEntryModel saveEntry(journalEntryModel myEntry, String userName) {
+        userModel user = userRepo.findByuserName(userName);
+        if (user == null) {
+            return null;
+        }
+
+        journalEntryModel journalEntry = journaleEntryRepo.save(myEntry);
+        user.getJournalEntries().add(journalEntry);
+
+        userServices.SaveUser(user);
+        return journalEntry;
+
     }
 
     public List<journalEntryModel> getAllEntries() {
@@ -28,15 +46,17 @@ public class JournalEntryServices {
         return journaleEntryRepo.findById(id);
     }
 
-    public Optional<journalEntryModel> DeleteEntry(ObjectId myId) {
+    public Optional<journalEntryModel> DeleteEntry(ObjectId myId, String userName) {
         Optional<journalEntryModel> entry = journaleEntryRepo.findById(myId);
         if (entry.isPresent()) {
+            userModel user = userRepo.findByuserName(userName);
+            user.getJournalEntries().removeIf(x -> x.getId().equals(myId));
+            userServices.SaveUser(user);
             journaleEntryRepo.deleteById(myId);
         }
         return entry; // Return the deleted entity
     }
 
-    @SuppressWarnings("null")
     public journalEntryModel updateOneEntry(ObjectId myid, journalEntryModel newEtry) {
 
         System.out.println("newEntry is " + newEtry);
