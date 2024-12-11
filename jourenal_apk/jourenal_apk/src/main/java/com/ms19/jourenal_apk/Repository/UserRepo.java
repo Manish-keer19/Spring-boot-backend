@@ -7,4 +7,5 @@ import com.ms19.jourenal_apk.entity.userModel;
 
 public interface UserRepo extends MongoRepository<userModel,ObjectId> {
     userModel findByuserName(String userName);
+    userModel deleteByuserName(String userName);
 }

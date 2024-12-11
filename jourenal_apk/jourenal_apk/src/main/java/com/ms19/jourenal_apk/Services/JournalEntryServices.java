@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ms19.jourenal_apk.Repository.JournaleEntryRepo;
 import com.ms19.jourenal_apk.Repository.UserRepo;
@@ -24,15 +25,14 @@ public class JournalEntryServices {
     @Autowired
     private UserRepo userRepo;
 
+    @Transactional
     public journalEntryModel saveEntry(journalEntryModel myEntry, String userName) {
         userModel user = userRepo.findByuserName(userName);
         if (user == null) {
             return null;
         }
-
         journalEntryModel journalEntry = journaleEntryRepo.save(myEntry);
         user.getJournalEntries().add(journalEntry);
-
         userServices.SaveUser(user);
         return journalEntry;
 
