@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ms19.jourenal_apk.Repository.JournaleEntryRepo;
@@ -13,7 +13,8 @@ import com.ms19.jourenal_apk.Repository.UserRepo;
 import com.ms19.jourenal_apk.entity.journalEntryModel;
 import com.ms19.jourenal_apk.entity.userModel;
 
-@Component
+// @Component
+@Service
 public class JournalEntryServices {
 
     @Autowired
@@ -33,17 +34,34 @@ public class JournalEntryServices {
         }
         journalEntryModel journalEntry = journaleEntryRepo.save(myEntry);
         user.getJournalEntries().add(journalEntry);
-        userServices.SaveUser(user);
+        userServices.saveUser(user);
         return journalEntry;
 
     }
 
-    public List<journalEntryModel> getAllEntries() {
-        return journaleEntryRepo.findAll(); // Return all entries as a List
+    public List<journalEntryModel> getJournalEntriesByUserName(String userName) {
+        userModel user = userServices.findByUsername(userName);
+        if (user != null) {
+            return user.getJournalEntries();
+        } else {
+            return null;
+        }
     }
 
-    public Optional<journalEntryModel> getOneEntry(ObjectId id) {
-        return journaleEntryRepo.findById(id);
+    public Optional<journalEntryModel> getOneEntry(ObjectId id, String userName) {
+        // Find user by username
+        userModel user = userServices.findByUsername(userName);
+
+        // If user is not found, return an empty Optional
+        if (user == null) {
+            return Optional.empty();
+        }
+
+        // Use Stream API to find the first journal entry with the matching ID
+        return user.getJournalEntries()
+                .stream()
+                .filter(entry -> entry.getId().equals(id)) // Match journal entry by ID
+                .findFirst(); // Return the first matching journal entry as Optional
     }
 
     public Optional<journalEntryModel> DeleteEntry(ObjectId myId, String userName) {
@@ -51,7 +69,7 @@ public class JournalEntryServices {
         if (entry.isPresent()) {
             userModel user = userRepo.findByuserName(userName);
             user.getJournalEntries().removeIf(x -> x.getId().equals(myId));
-            userServices.SaveUser(user);
+            userServices.saveUser(user);
             journaleEntryRepo.deleteById(myId);
         }
         return entry; // Return the deleted entity

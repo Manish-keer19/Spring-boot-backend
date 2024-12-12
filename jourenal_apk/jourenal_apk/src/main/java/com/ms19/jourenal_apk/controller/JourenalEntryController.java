@@ -1,11 +1,12 @@
 package com.ms19.jourenal_apk.controller;
 
 import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import com.ms19.jourenal_apk.entity.journalEntryModel;
 import com.ms19.jourenal_apk.Response.*;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/journal/")
 public class JourenalEntryController {
 
     @Autowired
@@ -30,30 +31,32 @@ public class JourenalEntryController {
         return "hello from manish";
     }
 
-    @PostMapping("/createEntry/{userName}")
-    public Response createEntry(@RequestBody journalEntryModel myEntry, @PathVariable String userName) {
+    @PostMapping("/createEntry")
+    public Response createEntry(@RequestBody journalEntryModel myEntry) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
 
             journalEntryModel journalEntry = journalEntryServices.saveEntry(myEntry, userName);
-
             if (journalEntry == null) {
-
                 return new Response(404, false, "jounal entry is null");
 
             }
             return new Response(200, true, "journal entry created succefully", null, journalEntry);
         } catch (Exception e) {
-
             return new Response(440, false, "could not create entry", e.getMessage());
         }
 
     }
 
-    @GetMapping("/getAllEntries")
-    public Response getAllEntries() {
-        try {
+    @GetMapping("/getJournalEntriesByUserName")
+    public Response getJournalEntriesByUserName() {
 
-            List<journalEntryModel> Entrys = journalEntryServices.getAllEntries();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
+
+            List<journalEntryModel> Entrys = journalEntryServices.getJournalEntriesByUserName(userName);
             return new Response(200, true, "journal entry fechted succefully", null, Entrys);
 
         } catch (Exception e) {
@@ -64,11 +67,14 @@ public class JourenalEntryController {
 
     @GetMapping("/getOneEntry/{myid}")
     public Response getEntry(@PathVariable ObjectId myid) {
-
-        System.out.println("myid" + myid);
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
 
-            Object entry = journalEntryServices.getOneEntry(myid).orElse(null);
+            Object entry = journalEntryServices.getOneEntry(myid, userName).orElse(null);
+            if (entry==null) {
+                return new Response(400, false, "entry is nulll",  "entry null he bro");
+            }
             return new Response(200, true, "journal entry fechted succefully", null, entry);
 
         } catch (Exception e) {
@@ -78,9 +84,11 @@ public class JourenalEntryController {
 
     }
 
-    @DeleteMapping("/deleteEntry/{userName}/{myid}")
-    public ResponseEntity<Response> deleteOnEntry(@PathVariable("myid") ObjectId myId, @PathVariable String userName) {
+    @DeleteMapping("/deleteEntry/{myid}")
+    public ResponseEntity<Response> deleteOnEntry(@PathVariable("myid") ObjectId myId) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userName = authentication.getName();
             // Attempt to delete the entry
             Object deletedEntry = journalEntryServices.DeleteEntry(myId, userName).orElse(null);
 

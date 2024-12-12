@@ -23,9 +23,11 @@ public class userModel {
     private String userName;
     @NonNull
     private String password;
+    private String email;
 
     @DBRef
+    // @DBRef(lazy = false)
     private List<journalEntryModel> journalEntries = new ArrayList<>();
 
-    private List<String>Role;
+    private List<String> Role;
 }

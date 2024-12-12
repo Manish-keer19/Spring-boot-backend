@@ -29,7 +29,7 @@ public class SpringSecurity {
         return http.authorizeHttpRequests(request -> request
                 .requestMatchers("/", "/api/v1/").permitAll()
                 .requestMatchers("/api/v1/journal/**", "/api/v1/user/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/Admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

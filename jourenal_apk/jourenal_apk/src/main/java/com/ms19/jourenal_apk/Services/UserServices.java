@@ -19,11 +19,22 @@ public class UserServices {
 
   private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-  public userModel SaveUser(userModel user) {
+  public userModel saveNewUser(userModel user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setRole(Arrays.asList("User"));
+    user.setRole(Arrays.asList("USER"));
     return userRepo.save(user);
 
+  }
+
+  public userModel saveAdmin(userModel user) {
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setRole(Arrays.asList("USER", "ADMIN"));
+    return userRepo.save(user);
+
+  }
+
+  public void saveUser(userModel user) {
+    userRepo.save(user);
   }
 
   public List<userModel> getAllUser() {
@@ -37,10 +48,12 @@ public class UserServices {
     }
     dbuser.setUserName(user.getUserName());
     dbuser.setPassword(user.getPassword());
-    return SaveUser(dbuser);
+    return saveNewUser(dbuser);
 
   }
 
-
+  public userModel findByUsername(String username) {
+    return userRepo.findByuserName(username);
+  }
 
 }
