@@ -1,0 +1,26 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+
+    <bean id="dev" class="org.example.Dev"  autowire="byName">
+<!--   <property name="age" value="19"/>-->
+<!--        <constructor-arg  value="50" />-->
+<!--        <property name="leptop" ref="lep1"/>-->
+<!--<constructor-arg ref="lep1"/>-->
+<!-- <property name="computer" ref="lep1"/>-->
+ <property name="computer" ref="desk1"/>
+    </bean>
+
+<bean id="lep1" class="org.example.Leptop"></bean>
+
+    <bean id="desk1" class="org.example.Desktop"></bean>
+
+
+
+
+
+</beans>

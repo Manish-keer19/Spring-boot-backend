@@ -1,0 +1,45 @@
+# Compiled source
+*.class
+
+# Logs
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Spring Boot specific
+target/
+out/
+
+# Maven and Gradle directories
+.mvn/
+.mvnw*
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse and STS
+.project
+.classpath
+.settings/
+.springBeans
+
+# VS Code
+.vscode/
+
+# Application properties (sensitive information)
+application.properties
+application.yml

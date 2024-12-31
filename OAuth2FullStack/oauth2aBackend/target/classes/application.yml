@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: oauth2Demo
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 35519966088-b0egbv2onotevdqi5opame2o8q1fth0v.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+            client-name: Google
+
+          github:
+            client-id: Ov23liqnDiWyjqhi9yvC
+            client-secret: fc6a40144d38bdc7dfc05bd8d862b075cdeedf44
+            scope: user:email,read:user
+            client-name: GitHub
